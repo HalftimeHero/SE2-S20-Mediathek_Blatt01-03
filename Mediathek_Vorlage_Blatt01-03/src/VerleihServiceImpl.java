@@ -50,9 +50,9 @@ class VerleihServiceImpl extends AbstractObservableService
     @Override
     public void verleiheAn(Kunde kunde, List<Medium> medien, Datum ausleihDatum)
     {
-        // Es sollte nur möglich sein an Kunden zu verleihen die im Bestand sind.
+        // Es sollte nur möglich sein an Kunden zu verliehen die im Bestand sind.
         assert true == kundeImBestand(
-                kunde) : "Vorbedingung verletzt: Kunde nicht im Bestand";
+                kunde) : "Vorbedingung verletzt: Kunde ist nicht im Bestand";
         //Da eine ganze Liste ausgeliehen werden kann ist es sinnvoll wenn alle Medien auch ausleihbar sind
         assert true == sindAlleNichtVerliehen(
                 medien) : "Vorbedingung verletzt: Mindestens eins der angegebenen Medien ist nicht ausleihbar oder die Liste ist leer";
@@ -71,12 +71,12 @@ class VerleihServiceImpl extends AbstractObservableService
     @Override
     public boolean istVerleihenMoeglich(Kunde kunde, List<Medium> medien)
     {
-        // Wenn Kunde nicht im Bestand ist, ist auch keine Verleihen möglich
-        assert true == kundeImBestand(
-                kunde) : "Vorbedingung verletzt: Kunde nicht im Bestand";
-        // Nur Medien die im bestand sind sollten ausleihbar sein. Sonst könnten beliebige Titel im Programm ausgeliehen werden ohne dass sie physisch ausgeliehen wurden.
-        assert true == medienImBestand(
-                medien) : "Vorbedingung verletzt: Mindestens eins der Medien nicht im Bestand";
+        //Wenn Kunde nicht im Bestand ist, ist auch keine verleihen Möglich
+        assert kundeImBestand(
+                kunde) == true : "Vorbedingung verletzt: Kunde ist nicht im Bestand";
+        //Nur Medien die im bestand sind sollten ausleihbar sein. Sonst könnten beliebige Titel im Programm ausgeliehen werden ohne dass sie physisch ausgeliehen wurden.
+        assert medienImBestand(
+                medien) == true : "Vorbedingung verletzt: Min eins der Medien ist nicht im Bestand";
 
         return sindAlleNichtVerliehen(medien);
     }
