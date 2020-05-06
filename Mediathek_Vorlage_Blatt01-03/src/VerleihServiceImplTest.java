@@ -1,3 +1,4 @@
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -94,6 +95,28 @@ public class VerleihServiceImplTest
     @Test
     public void testNochEinTestFall2()
     {
+        //In der Liste sind _abbey[0] und _bad[1]
+        List<Medium> _sindVerliehen = _medienbestand.getMedien()
+            .subList(0, 2);
+        //In der Liste sind _shape[0] 
+        List<Medium> _sindNichtVerliehen = _medienbestand.getMedien()
+            .subList(2, 3);
+        //Verleiht _abbey[0] und _bad[1] an _homer
+        _verleihService.verleiheAn(_homer, _sindVerliehen, _datum);
+
+        //ist verliehen Test
+        assertTrue(_verleihService.istVerliehen(_sindVerliehen.get(0)));
+        assertTrue(_verleihService.istVerliehen(_sindVerliehen.get(1)));
+        assertFalse(_verleihService.istVerliehen(_sindNichtVerliehen.get(0)));
+        assertTrue(_verleihService.istVerleihenMoeglich(_homer,
+                _sindNichtVerliehen));
+        assertTrue(_verleihService.istVerliehen(_sindVerliehen.get(0)));
+
+        //getEntleiherFuer
+        assertEquals(_homer, _verleihService.getEntleiherFuer(_bad));
+
+        _verleihService.nimmZurueck(_sindVerliehen, _datum);
+        assertFalse(_verleihService.istVerliehen(_sindVerliehen.get(0)));
     }
 
     @Test
