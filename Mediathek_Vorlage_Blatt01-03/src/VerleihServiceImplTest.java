@@ -68,32 +68,46 @@ public class VerleihServiceImplTest
     @Test
     public void testNochEinTestFall1()
     {
-        //erstellt zwei Listen. Eine mit ausgeliehenen Medien und eine mit Medien welche man ausleihen kann
-        List<Medium> _sindVerliehen = _medienbestand.getMedien()
-            .subList(0, 2);
-        List<Medium> _sindNichtVerliehen = _medienbestand.getMedien()
-            .subList(2, 3);
-        //Verleiht _shape an _homer
-        _verleihService.verleiheAn(_homer, _sindVerliehen, _datum);
 
-        //
-        //        System.out.println("sind verliehen" + _sindVerliehen);
-        //        System.out.println("sind nicht verliehen" + _sindNichtVerliehen);
-        //        System.out.println(_medienbestand.getMedien());
-        //        System.out.println("verleihkarte" + _verleihService.getVerleihkartenFuer(_homer));
-        assertTrue(_verleihService.istVerliehen(_sindVerliehen.get(0)));
-        assertTrue(_verleihService.istVerliehen(_sindVerliehen.get(1)));
-        assertFalse(_verleihService.istVerliehen(_sindNichtVerliehen.get(2)));
-
-        assertTrue(_verleihService.istVerleihenMoeglich(_homer,
-                _sindNichtVerliehen));
-
-        //getEntleiherFuer
-        assertEquals(_homer, _verleihService.getEntleiherFuer(_shape));
     }
 
     @Test
-    public void testNochEinTestFall2()
+    public void testgetAusgelieheneMedienFuer()
+    {
+        List<Medium> _sindVerliehen = _medienbestand.getMedien()
+            .subList(0, 2);
+
+        //Verleiht _shape an _homer
+        _verleihService.verleiheAn(_homer, _sindVerliehen, _datum);
+
+        assertEquals(_sindVerliehen,
+                _verleihService.getAusgelieheneMedienFuer(_homer));
+
+    }
+
+    @Test
+    public void testNimmZurueck()
+    {
+        List<Medium> _sindVerliehen = _medienbestand.getMedien()
+            .subList(0, 2);
+
+        //Verleiht _shape an _homer
+        _verleihService.verleiheAn(_homer, _sindVerliehen, _datum);
+
+        assertTrue(_verleihService.istVerliehen(_sindVerliehen.get(0)));
+        _verleihService.nimmZurueck(_sindVerliehen, _datum);
+        assertFalse(_verleihService.istVerliehen(_sindVerliehen.get(0)));
+
+    }
+
+    /**
+     * Alle funktionierenden Test sind in einer Klasse weil sie alle die Listen _sindVerliehen 
+     * und _sindNichtVerliehen benutzten. Soll für jeden Test eine eigene Methode geschrieben werden? 
+     * 
+     */
+
+    @Test
+    public void testsFuerVerleihen()
     {
         //In der Liste sind _abbey[0] und _bad[1]
         List<Medium> _sindVerliehen = _medienbestand.getMedien()
@@ -111,18 +125,25 @@ public class VerleihServiceImplTest
         assertTrue(_verleihService.istVerleihenMoeglich(_homer,
                 _sindNichtVerliehen));
         assertTrue(_verleihService.istVerliehen(_sindVerliehen.get(0)));
-
+        //Prüft ob Homer 2 Medien ausgeliehen hat
+        assertEquals(_sindVerliehen,
+                _verleihService.getAusgelieheneMedienFuer(_homer));
         //getEntleiherFuer
         assertEquals(_homer, _verleihService.getEntleiherFuer(_bad));
 
+        //_abbey und _bar werden zurueckgegeben
         _verleihService.nimmZurueck(_sindVerliehen, _datum);
-        assertFalse(_verleihService.istVerliehen(_sindVerliehen.get(0)));
-    }
 
-    @Test
-    public void testNochEinTestFall3()
-    {
-    }
+        assertTrue(_verleihService
+            .sindAlleNichtVerliehen(_medienbestand.getMedien()));
+
+        assertFalse(_verleihService.istVerliehen(_sindVerliehen.get(0)));
+        //Leere Liste _isEmpty
+        List<Medium> _isEmpty = new ArrayList<Medium>();
+        // _isEmpty.clear();
+        //Prüft ob Homer nut noch ein Medium ausgeliehen hat
+        assertEquals(_isEmpty,
+                _verleihService.getAusgelieheneMedienFuer(_homer));
 
     private void setUpKunden()
     {
