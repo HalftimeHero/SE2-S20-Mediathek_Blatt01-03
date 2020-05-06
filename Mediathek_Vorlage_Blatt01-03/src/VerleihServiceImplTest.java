@@ -22,6 +22,8 @@ public class VerleihServiceImplTest
     private Kunde _brian;
     private KundenstammService _kundenstamm;
 
+    private Datum _datum;
+
     private Medium _abbey;
     private Medium _bad;
     private Medium _shape;
@@ -65,6 +67,28 @@ public class VerleihServiceImplTest
     @Test
     public void testNochEinTestFall1()
     {
+        //erstellt zwei Listen. Eine mit ausgeliehenen Medien und eine mit Medien welche man ausleihen kann
+        List<Medium> _sindVerliehen = _medienbestand.getMedien()
+            .subList(0, 2);
+        List<Medium> _sindNichtVerliehen = _medienbestand.getMedien()
+            .subList(2, 3);
+        //Verleiht _shape an _homer
+        _verleihService.verleiheAn(_homer, _sindVerliehen, _datum);
+
+        //
+        //        System.out.println("sind verliehen" + _sindVerliehen);
+        //        System.out.println("sind nicht verliehen" + _sindNichtVerliehen);
+        //        System.out.println(_medienbestand.getMedien());
+        //        System.out.println("verleihkarte" + _verleihService.getVerleihkartenFuer(_homer));
+        assertTrue(_verleihService.istVerliehen(_sindVerliehen.get(0)));
+        assertTrue(_verleihService.istVerliehen(_sindVerliehen.get(1)));
+        assertFalse(_verleihService.istVerliehen(_sindNichtVerliehen.get(2)));
+
+        assertTrue(_verleihService.istVerleihenMoeglich(_homer,
+                _sindNichtVerliehen));
+
+        //getEntleiherFuer
+        assertEquals(_homer, _verleihService.getEntleiherFuer(_shape));
     }
 
     @Test
